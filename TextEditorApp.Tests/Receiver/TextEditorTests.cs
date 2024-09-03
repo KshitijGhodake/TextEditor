@@ -1,59 +1,65 @@
-﻿using TextEditor.Command;
+﻿/******************************************************************************
+ * Filename    = TextEditorTests.cs
+ *
+ * Author      = Kshitij Mahendra Ghodake
+ *
+ * Product     = TextEditorApp
+ * 
+ * Project     = TextEditorTests
+ *
+ * Description = Unit tests for the text editor app.
+ *****************************************************************************/
+
+using TextEditor.Command;
 using TextEditor.Receiver;
 using TextEditor.Invoker;
-namespace TextEditorApp.MSTests.Invoker
+namespace TextEditorApp.Tests.Receiver
 {
+    /// <summary>
+    /// Unit tests for the text editor.
+    /// </summary>
     [TestClass]
     public class TextEditorTests
     {
+        /// <summary>
+        /// Tests the execution of the insertion command.
+        /// </summary>
         [TestMethod]
-        public void ExecuteCommand_ShouldExecuteAndStoreCommand()
+        public void ExecuteCommandShouldExecuteAndStoreCommand()
         {
-            // Arrange
-            var document = new TextDocument();
-            var editor = new TextEditorApplication();
-            var command = new InsertTextCommand(document, "Hello, world!");
+            TextDocument document = new();
+            TextEditorApplication editor = new();
+            InsertTextCommand command = new( document , "Hello, world!" );
+            editor.ExecuteCommand( command );
 
-            // Act
-            editor.ExecuteCommand(command);
-
-            // Assert
-            Assert.AreEqual("Hello, world!", document.Content);
+            Assert.AreEqual( "Hello, world!" , document.Content );
         }
 
+        /// <summary>
+        /// Tests the undo command after executing an insert command.
+        /// </summary>
         [TestMethod]
-        public void Undo_ShouldUndoLastExecutedCommand()
+        public void UndoShouldUndoLastExecutedCommand()
         {
-            // Arrange
-            var document = new TextDocument();
-            var editor = new TextEditorApplication();
-            var command = new InsertTextCommand(document, "Hello, world!");
-
-            editor.ExecuteCommand(command);
-
-            // Act
+            TextDocument document = new();
+            TextEditorApplication editor = new();
+            InsertTextCommand command = new( document , "Hello, world!" );
+            editor.ExecuteCommand( command );
             editor.Undo();
 
-            // Assert
-            Assert.AreEqual(string.Empty, document.Content);
+            Assert.AreEqual( string.Empty , document.Content );
         }
 
+        /// <summary>
+        /// Tests undoing when there is no previous command.
+        /// </summary>
         [TestMethod]
-        public void Undo_ShouldNotFailWhenNoCommandsExecuted()
+        public void UndoShouldNotFailWhenNoCommandsExecuted()
         {
-            // Arrange
-            var editor = new TextEditorApplication();
+            TextEditorApplication editor = new();
+            editor.Undo();
 
-            // Act & Assert
-            try
-            {
-                editor.Undo();
-                Assert.IsTrue(true); // Pass the test if no exception is thrown
-            }
-            catch
-            {
-                Assert.Fail("Undo should not throw an exception when no commands are executed.");
-            }
+            Assert.IsTrue( true );
         }
     }
 }

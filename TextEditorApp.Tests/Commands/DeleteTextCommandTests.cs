@@ -1,34 +1,63 @@
-﻿using TextEditor.Command;
+﻿/******************************************************************************
+ * Filename    = DeleteTextCommandTests.cs
+ *
+ * Author      = Kshitij Mahendra Ghodake
+ *
+ * Product     = TextEditorApp
+ * 
+ * Project     = DeleteTextCommandTests
+ *
+ * Description = Unit tests for the checking deletion of text command.
+ *****************************************************************************/
+
+using TextEditor.Command;
 using TextEditor.Receiver;
 
-namespace TextEditorApp.MSTests.Commands
+namespace TextEditorApp.Tests.Commands
 {
+    /// <summary>
+    /// Unit tests for the delete text commands.
+    /// </summary>
     [TestClass]
     public class DeleteTextCommandTests
     {
+        /// <summary>
+        /// Tests deletion of text.
+        /// </summary>
         [TestMethod]
-        public void Execute_ShouldDeleteTextFromDocument()
+        public void ShouldDeleteTextFromDocument()
         {
-            // Arrange
-            var document = new TextDocument();
-            var insertCommand = new InsertTextCommand(document, "Hello, world!");
+            TextDocument document = new();
+            InsertTextCommand insertCommand = new( document , "Hello, world!" );
             insertCommand.Execute();
-
-            var deleteCommand = new DeleteTextCommand(document, 7);
-
-            // Act
+            DeleteTextCommand deleteCommand = new( document , 7 );
             deleteCommand.Execute();
 
-            // Assert
-            Assert.AreEqual("Hello,", document.Content);
+            Assert.AreEqual( "Hello," , document.Content );
         }
 
+        /// <summary>
+        /// Tests the constructor check of inputs.
+        /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldThrowException_WhenTextDocumentIsNull()
+        [ExpectedException( typeof( ArgumentNullException ) )]
+        public void ShouldThrowExceptionWhenTextDocumentIsNull()
         {
-            // Arrange, Act & Assert
-            var command = new DeleteTextCommand(null, 5);
+            _ = new DeleteTextCommand( null , 5 );
+        }
+
+        /// <summary>
+        /// Tests undo after delete operation.
+        /// </summary>
+        [TestMethod]
+        public void ShouldRestoreTextAfterDelete()
+        {
+            TextDocument document = new();
+            document.InsertText( "Hello, world!" );
+            DeleteTextCommand deleteCommand = new( document , 1 );
+            deleteCommand.Undo();
+
+            Assert.AreEqual( "Hello, world!_UNDO_" , document.Content );
         }
     }
 }

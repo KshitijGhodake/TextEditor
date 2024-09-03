@@ -1,10 +1,25 @@
-﻿using TextEditor.Command;
+﻿/******************************************************************************
+ * Filename    = Program.cs
+ *
+ * Author      = Kshitij Mahendra Ghodake
+ *
+ * Product     = TextEditorApp
+ * 
+ * Project     = ClientProgram
+ *
+ * Description = Client program to run the editor app
+ *****************************************************************************/
+
+using TextEditor.Command;
 using TextEditor.Invoker;
 using TextEditor.Receiver;
 
 class ClientProgram
 {
-    public static void Main(string[] args)
+    /// <summary>
+    /// Client program to test run the app.
+    /// </summary>
+    public static void Main()
     {
         var document = new TextDocument();
         var editor = new TextEditorApplication();
@@ -14,10 +29,10 @@ class ClientProgram
         editor.ExecuteCommand(command_1);
         editor.ExecuteCommand(command_2);
 
-        //Console.WriteLine(document.Content);
+        
         Console.WriteLine("Undoing last command");
 
         editor.Undo();
-        //Console.WriteLine(document.Content);
+        
     }
 }
