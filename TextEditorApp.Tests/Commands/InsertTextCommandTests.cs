@@ -1,58 +1,74 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TextEditor;
+﻿/******************************************************************************
+ * Filename    = InsertTextCommandTests.cs
+ *
+ * Author      = Kshitij Mahendra Ghodake
+ *
+ * Product     = TextEditorApp
+ * 
+ * Project     = InsertTextCommandTests
+ *
+ * Description = Unit tests for checking insertion of text command.
+ *****************************************************************************/
+
+using System.Diagnostics.CodeAnalysis;
 using TextEditor.Command;
 using TextEditor.Receiver;
-namespace TextEditorApp.MSTests.Commands
+namespace TextEditorApp.Tests.Commands
 {
+    /// <summary>
+    /// Unit tests for the insert text command.
+    /// </summary>
     [TestClass]
     public class InsertTextCommandTests
     {
+        /// <summary>
+        /// Tests the insertion of text into the document
+        /// </summary>
         [TestMethod]
-        public void Execute_ShouldInsertTextIntoDocument()
+        public void ShouldInsertTextIntoDocument()
         {
-            // Arrange
             var document = new TextDocument();
-            var command = new InsertTextCommand(document, "Hello, world!");
-
-            // Act
+            var command = new InsertTextCommand( document , "Hello, world!" );
             command.Execute();
 
-            // Assert
-            Assert.AreEqual("Hello, world!", document.Content);
+            Assert.AreEqual( "Hello, world!" , document.Content );
         }
 
+        /// <summary>
+        /// Tests undo after insertion in the document.
+        /// </summary>
         [TestMethod]
-        public void Undo_ShouldRemoveInsertedTextFromDocument()
+        public void UndoShouldRemoveInsertedTextFromDocument()
         {
-            // Arrange
             var document = new TextDocument();
-            var command = new InsertTextCommand(document, "Hello, world!");
+            var command = new InsertTextCommand( document , "Hello, world!" );
             command.Execute();
-
-            // Act
             command.Undo();
 
-            // Assert
-            Assert.AreEqual(string.Empty, document.Content);
+            Assert.AreEqual( string.Empty , document.Content );
         }
 
+        /// <summary>
+        /// Tests the constructor check of input document.
+        /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldThrowException_WhenTextDocumentIsNull()
+        [ExpectedException( typeof( ArgumentNullException ) )]
+        [ExcludeFromCodeCoverage]
+        public void ConstructorShouldThrowExceptionWhenTextDocumentIsNull()
         {
-            // Arrange, Act & Assert
-            var command = new InsertTextCommand(null, "Test");
+            _ = new InsertTextCommand( null , "Test" );
         }
 
+        /// <summary>
+        /// Tests the constructor check of text to insert.
+        /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Constructor_ShouldThrowException_WhenTextIsNull()
+        [ExpectedException( typeof( ArgumentNullException ) )]
+        [ExcludeFromCodeCoverage]
+        public void ConstructorShouldThrowExceptionWhenTextIsNull()
         {
-            // Arrange
             var document = new TextDocument();
-
-            // Act & Assert
-            var command = new InsertTextCommand(document, null);
+            _ = new InsertTextCommand( document , null );
         }
     }
 }
